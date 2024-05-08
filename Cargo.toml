@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+notify-rust = "4.11.0"
 reqwest = { version = "0.12.4", features = ["blocking", "json"] }
 serde = "1.0.201"
 serde_derive = "1.0.201"

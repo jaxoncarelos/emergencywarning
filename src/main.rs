@@ -1,9 +1,9 @@
-use std::sync::mpsc::Receiver;
-
 use crate::{
     emergency_warning::{check_warning, poll_warning, APIResponse, Properties},
     helper::State,
 };
+use notify_rust::Notification;
+use std::sync::mpsc::Receiver;
 
 mod emergency_warning;
 mod helper;
@@ -27,7 +27,6 @@ async fn main() {
         state_enums.push(helper::state_to_enum(state.trim()));
     }
     let mut rx_vec: Vec<Receiver<Properties>> = Vec::new();
-    let mut responses: Vec<APIResponse> = Vec::new();
     for state in state_enums {
         match poll.trim() {
             "poll" => {
@@ -50,10 +49,15 @@ async fn main() {
     }
     for rx in rx_vec {
         for received in rx {
-            println!("{:?}", received);
-            responses.push(APIResponse {
-                features: vec![received],
-            });
+            println!("Event: {}", received.properties.event);
+            println!("Severity: {}", received.properties.severity);
+            println!("Certainty: {}", received.properties.certainty);
+            println!("Area Description: {}", received.properties.areaDesc);
+            Notification::new()
+                .summary(&received.properties.event)
+                .body(&received.properties.areaDesc)
+                .show()
+                .unwrap();
         }
     }
 }
