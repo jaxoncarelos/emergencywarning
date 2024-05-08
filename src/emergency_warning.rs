@@ -1,16 +1,18 @@
+use std::sync::mpsc::{Receiver, Sender};
+
 use reqwest;
 use serde_derive::Deserialize;
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct APIResponse {
     pub features: Vec<Properties>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Properties {
     pub properties: FeatureBreakDown,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct FeatureBreakDown {
     pub event: String,
     pub severity: String,
@@ -32,7 +34,19 @@ impl Default for APIResponse {
         }
     }
 }
-
+pub async fn poll_warning(state: &crate::helper::State, severity: String, tx: Sender<Properties>) {
+    // every 5 minutes, check for new warnings
+    let mut interval = tokio::time::interval(std::time::Duration::from_secs(300));
+    loop {
+        interval.tick().await;
+        let response = check_warning(state, state.abbreviate()).await.unwrap();
+        for feature in response.features {
+            if feature.properties.severity == severity {
+                tx.send(feature);
+            }
+        }
+    }
+}
 pub async fn check_warning(_state: &crate::helper::State, abbrev: String) -> Option<APIResponse> {
     let client = reqwest::Client::builder()
         .user_agent("jaxoncarelos@gmail.com")
