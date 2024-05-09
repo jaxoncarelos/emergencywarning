@@ -47,15 +47,15 @@ async fn main() {
             _ => panic!("Invalid poll option"),
         }
     }
-    let mut lastFive: Vec<Properties> = Vec::new();
+    let mut last_five: Vec<Properties> = Vec::new();
     for rx in rx_vec {
         for received in rx {
-            if lastFive.contains(&received) {
+            if last_five.contains(&received) {
                 continue;
             }
-            lastFive.push(received.clone());
-            if lastFive.len() > 5 {
-                lastFive.remove(0);
+            last_five.push(received.clone());
+            if last_five.len() > 5 {
+                last_five.remove(0);
             }
             helper::pretty_print(received);
         }
