@@ -37,27 +37,27 @@ async fn main() {
                 });
             }
             "once" => {
-                println!(
-                    "{:?}",
-                    emergency_warning::check_warning(&state, state.abbreviate())
-                        .await
-                        .unwrap(),
-                );
+                let check_warning = emergency_warning::check_warning(&state, state.abbreviate())
+                    .await
+                    .unwrap();
+                for feature in check_warning.features {
+                    helper::pretty_print(feature);
+                }
             }
             _ => panic!("Invalid poll option"),
         }
     }
+    let mut lastFive: Vec<Properties> = Vec::new();
     for rx in rx_vec {
         for received in rx {
-            println!("Event: {}", received.properties.event);
-            println!("Severity: {}", received.properties.severity);
-            println!("Certainty: {}", received.properties.certainty);
-            println!("Area Description: {}", received.properties.areaDesc);
-            Notification::new()
-                .summary(&received.properties.event)
-                .body(&received.properties.areaDesc)
-                .show()
-                .unwrap();
+            if lastFive.contains(&received) {
+                continue;
+            }
+            lastFive.push(received.clone());
+            if lastFive.len() > 5 {
+                lastFive.remove(0);
+            }
+            helper::pretty_print(received);
         }
     }
 }

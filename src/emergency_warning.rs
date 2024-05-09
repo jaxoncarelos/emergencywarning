@@ -7,12 +7,12 @@ pub struct APIResponse {
     pub features: Vec<Properties>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, PartialEq, Clone)]
 pub struct Properties {
     pub properties: FeatureBreakDown,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, PartialEq, Clone)]
 pub struct FeatureBreakDown {
     pub event: String,
     pub severity: String,

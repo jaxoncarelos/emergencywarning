@@ -1,3 +1,5 @@
+use crate::emergency_warning::Properties;
+
 // array of tuples stat ename to abbrevation
 pub enum State {
     Alabama,
@@ -162,4 +164,11 @@ impl State {
         .to_string();
         abbrev
     }
+}
+pub fn pretty_print(response: Properties) {
+    let response = response.properties;
+    println!("Event: {}", response.event);
+    println!("Severity: {}", response.severity);
+    println!("Certainty: {}", response.certainty);
+    println!("Area Description: {}\n", response.areaDesc);
 }
