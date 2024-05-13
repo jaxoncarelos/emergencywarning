@@ -110,7 +110,7 @@ pub fn state_to_enum(state: &str) -> State {
 impl State {
     pub fn abbreviate(&self) -> String {
         // State::Alabama -> AL
-        let abbrev = match self {
+        match self {
             State::Alabama => "AL",
             State::Arizona => "AZ",
             State::Arkansas => "AR",
@@ -161,8 +161,7 @@ impl State {
             State::Wisconsin => "WI",
             State::Wyoming => "WY",
         }
-        .to_string();
-        abbrev
+        .to_string()
     }
 }
 pub fn pretty_print(response: Properties) {

@@ -1259,7 +1259,10 @@ dependencies = [
 name = "rustTornadoWarning"
 version = "0.1.0"
 dependencies = [
+ "mac-notification-sys",
  "notify-rust",
+ "objc-foundation",
+ "objc_id",
  "reqwest",
  "serde",
  "serde_derive",

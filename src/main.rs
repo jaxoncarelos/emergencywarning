@@ -1,8 +1,7 @@
 use crate::{
-    emergency_warning::{check_warning, poll_warning, APIResponse, Properties},
+    emergency_warning::{poll_warning, Properties},
     helper::State,
 };
-use notify_rust::Notification;
 use std::sync::mpsc::Receiver;
 
 mod emergency_warning;
@@ -47,6 +46,7 @@ async fn main() {
             _ => panic!("Invalid poll option"),
         }
     }
+
     let mut last_five: Vec<Properties> = Vec::new();
     for rx in rx_vec {
         for received in rx {
